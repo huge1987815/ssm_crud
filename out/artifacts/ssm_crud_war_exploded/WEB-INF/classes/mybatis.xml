@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+  <!-- 外部文件 -->
+  <!-- 数据源 -->
+  <!-- 交给spring -->
+  <!-- 别名 -->
+  <typeAliases>
+     <!-- 单个的定义别名 -->
+     <!-- <typeAlias type="com.bw.entity.EmpDeptQuery" alias="emdq"/> -->
+     <!-- 批量定义别名 -->
+     <package name="com.bw.entity"/>
+  </typeAliases>
+  
+  <!-- 配置pagehelper插件分页功能 -->
+  <plugins>
+    <plugin interceptor="com.github.pagehelper.PageInterceptor"/><!-- 自已去适应不同的数据库 -->
+  </plugins>
+</configuration>
