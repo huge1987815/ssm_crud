@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bw.mapper.MyMapper">
+    <!--实现员工列表-->
+    <resultMap id="EmpDeptVoResultMap" type="EmpDeptVo">
+       <!--员工信息-->
+        <id column="eid" property="eid"/>
+        <result column="ename" property="ename"/>
+        <result column="sex" property="sex"/>
+        <result column="birthdate" property="birthdate"/>
+        <result column="hobby" property="hobby"/>
+        <result column="did" property="did"/>
+        <!--部门信息-->
+        <association property="dept" javaType="com.bw.entity.Dept">
+           <id column="did" property="did"/>
+           <result column="dname" property="dname"/>
+        </association>
+    </resultMap>
+    <select id="listemp" parameterType="hashmap" resultMap="EmpDeptVoResultMap">
+        select e.*,d.dname
+        from tb_emp e,tb_dept d
+        <where>
+            e.did=d.did
+            <if test="ename!=null || ename!=''">
+                and e.ename like'%${ename}%'
+            </if>
+            <if test="mindate.length()>0 and maxdate.length()>0">
+                and e.birthdate between #{mindate} and #{maxdate}
+            </if>
+        </where>
+    </select>
+
+    <!--实现下拉框功能-->
+    <select id="listdept" resultType="dept" statementType="CALLABLE">
+        <![CDATA[call listdept();]]>
+    </select>
+
+    <!--实现添加功能-->
+    <insert id="addemp" parameterType="emp" statementType="CALLABLE">
+        <![CDATA[call addemp(#{ename},#{sex},#{birthdate},#{hobby},#{did});]]>
+    </insert>
+
+    <!--实现批量删除-->
+    <delete id="pldelete" parameterType="int[]">
+        delete from tb_emp where eid in
+        <foreach collection="array" item="eid" index="no" open="(" separator="," close=")">
+            #{eid}
+        </foreach>
+    </delete>
+
+    <!--实现回显功能-->
+    <select id="show" parameterType="int" resultType="emp" statementType="CALLABLE">
+         <![CDATA[call hx(#{eid});]]>
+    </select>
+
+    <!--实现修改功能-->
+    <update id="update" parameterType="emp" statementType="CALLABLE">
+        <![CDATA[call upd(#{ename},#{sex},#{birthdate},#{hobby},#{did},#{eid});]]>
+    </update>
+</mapper>
